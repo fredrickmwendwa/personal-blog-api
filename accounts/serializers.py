@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from .models import Profile
 
 
 class SignupSerializer(serializers.ModelSerializer):
@@ -10,13 +11,18 @@ class SignupSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email', 'password']
 
     def create(self, validated_data):
-        # We use create_user() instead of create() because
-        # create_user() automatically hashes the password.
-        # If we used create() directly, the password would be
-        # stored as plain text — a serious security bug.
         user = User.objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],
             password=validated_data['password']
         )
         return user
+    
+class ProfileSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
+    email = serializers.CharField(source='user.email', read_only=True)
+
+    class Meta:
+        model = Profile
+        fields = ['id', 'username', 'email', 'bio', 'profile_picture', 'created_at']
+        read_only_fields = ['id', 'created_at']

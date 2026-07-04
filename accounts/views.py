@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework import status
 
-from .serializers import SignupSerializer
+from .serializers import SignupSerializer, ProfileSerializer
 
 
 @api_view(['POST'])
@@ -62,10 +62,28 @@ def login_view(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def logout_view(request):
-    # Deleting the user's token forces them to log in again
-    # to get a new one — effectively "logging them out".
     request.user.auth_token.delete()
     return Response(
         {"message": "Logout successful"},
         status=status.HTTP_200_OK
     )
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def profile_view(request):
+    profile = request.user.profile
+    serializer = ProfileSerializer(profile)
+    return Response(serializer.data)
+
+
+@api_view(['PUT', 'PATCH'])
+@permission_classes([IsAuthenticated])
+def update_profile_view(request):
+    profile = request.user.profile
+    serializer = ProfileSerializer(profile, data=request.data, partial=True)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
