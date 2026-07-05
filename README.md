@@ -23,7 +23,7 @@ A RESTful API for a personal blog, built with Django and Django REST Framework. 
 
 ```
 personal_blog_api/
-├── blog_project/       # Project settings and root URL config
+├── config/       # Project settings and root URL config
 ├── accounts/           # User auth, profiles
 ├── posts/               # Blog posts CRUD
 ├── requirements.txt
@@ -35,7 +35,7 @@ personal_blog_api/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/personal-blog-api.git
+git clone https://github.com/fredrickmwendwa/personal-blog-api.git
 cd personal-blog-api
 ```
 
